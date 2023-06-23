@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from "react-router-dom";
 // import {Badge} from '@mui/material'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -58,6 +59,10 @@ const MenuItem = styled.div`
     margin-left: 25px;
 
 `
+const StyledLink  = styled(Link)`
+    text-decoration: none;
+    color: White;
+`;
 
 export default function Navbar() {
     return (
@@ -74,11 +79,11 @@ export default function Navbar() {
                     <Logo>SHOP</Logo>
                 </Center>
                 <Right>
-                    <MenuItem>REGISTER</MenuItem>
-                    <MenuItem>SIGN IN</MenuItem>
+                    <MenuItem><StyledLink to='register'>REGISTER</StyledLink></MenuItem>
+                    <MenuItem><StyledLink to='login'>SIGN IN</StyledLink></MenuItem>
                     <MenuItem>
                         {/* <Badge badgeContent={4} color="primary"></Badge> */}
-                        <ShoppingCartOutlinedIcon />
+                        <StyledLink  to='cart'><ShoppingCartOutlinedIcon /></StyledLink>
                     </MenuItem>
                 </Right>
             </Wrapper>
