@@ -35,14 +35,16 @@ def registerUser(request):
         # serializer.data['tokens'] = {'refresh': str(token), 'access': str(token.access_token)}
         return Response(serializer.data)
     except IntegrityError as e:
-        return Response("You can't use this username")
+        return Response("This username is already taken.")
 
 @api_view(['POST'])
 def loginUser(request):
     data = request.data
+    print(data)
     user = authenticate(username=data['username'], password=data['password'])
     if user is None:
-            return Response('A user with this email and password was not found.')
+            return Response('A user with this username and password was not found.')
     # TODO: add access and refresh token
-    serializer = UserSerializerWithToken(user, many=False)
-    return Response(serializer.data)
+    token = RefreshToken.for_user(user)
+    # serializer = UserSerializerWithToken(user, many=False)
+    return Response(({'refresh': str(token), 'access': str(token.access_token)}))

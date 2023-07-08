@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
 // import {Badge} from '@mui/material'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { useCallback } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
 const Container = styled.div`
     height: 80px;
     background-color: black;
@@ -65,6 +69,16 @@ const StyledLink  = styled(Link)`
 `;
 
 export default function Navbar() {
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [username, setUsername] = useState('')
+    const handleLogout = useCallback(
+        () => {
+            
+            dispatch(logout())
+        },[isLoggedIn]
+  )
     return (
         <Container>
             <Wrapper>
@@ -76,11 +90,12 @@ export default function Navbar() {
                     </SearchContainer>
                 </Left>
                 <Center>
-                    <Logo>SHOP</Logo>
+                    <Logo><StyledLink  to='/'>SHOP</StyledLink></Logo>
                 </Center>
                 <Right>
-                    <MenuItem><StyledLink to='register'>REGISTER</StyledLink></MenuItem>
-                    <MenuItem><StyledLink to='login'>SIGN IN</StyledLink></MenuItem>
+                    { isLoggedIn ? null: <MenuItem><StyledLink to='register'>REGISTER</StyledLink></MenuItem>}
+                    { isLoggedIn ? null: <MenuItem><StyledLink to='login'>LOGIN</StyledLink></MenuItem>}
+                    { isLoggedIn ? <MenuItem onClick={handleLogout}><StyledLink>LOGOUT</StyledLink></MenuItem>: null}
                     <MenuItem>
                         {/* <Badge badgeContent={4} color="primary"></Badge> */}
                         <StyledLink  to='cart'><ShoppingCartOutlinedIcon /></StyledLink>

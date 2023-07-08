@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Navbar from "../Components/Navbar";
 import Products from "../Components/Products";
 import Footer from "../Components/Footer";
-
+import axios from 'axios';
 import React from 'react'
 
 const Container = styled.div``
@@ -29,6 +29,9 @@ const Select = styled.select`
 const Option = styled.option``
 
 export default function ProductList() {
+    
+    const res = axios.get('https://fakestoreapi.com/products')
+    console.log(res)
   return (
     <Container>
         <Navbar />

@@ -1,7 +1,10 @@
 import styled from "styled-components";
-
 import React from 'react'
-
+import { useCallback, useState } from 'react'
+import { publicRequest } from "../requestMethods";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure } from "../redux/userSlice";
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
@@ -52,14 +55,43 @@ const Link = styled.a`
 `
 
 export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const handleLogin = useCallback(
+    async (e) => {
+        e.preventDefault();
+        dispatch(loginStart())
+        try {
+            const res = await publicRequest.post('/login', {username, password});
+            dispatch(loginSuccess(res.data))
+            navigate('/')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+  )
   return (
     <Container>
         <Wrapper>
             <Title>SIGN IN</Title>
             <Form>
-                <Input placeholder="username"></Input>
-                <Input placeholder="password"></Input>
-                <Button>LOGIN</Button>
+                <Input 
+                  type="text"
+                  placeholder='username' 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <Input 
+                  type="password"
+                  placeholder='password' 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button
+                  onClick={handleLogin}
+                >LOGIN</Button>
                 <Link>DO YOU NOT REMEMBER THE PASSWORD?</Link>
                 <Link>CREATE A NEW ACCOUNT</Link>
             </Form>

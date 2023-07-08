@@ -2,7 +2,7 @@ import { Add, Remove } from '@mui/icons-material';
 import styled from "styled-components";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
-
+import { Link } from "react-router-dom";
 import React from 'react'
 
 const Container = styled.div``
@@ -136,7 +136,7 @@ export default function Cart() {
         <Wrapper>
             <Title>YOUR BAG</Title>
             <Top>
-                <TopButton>CONTINUE SHOPPING</TopButton>
+                <TopButton><Link to='/'>CONTINUE SHOPPING</Link> </TopButton>
                 <TopTexts>
                     <TopText>Shopping Bag(2)</TopText>
                     <TopText>Your Wishlist (0)</TopText>
