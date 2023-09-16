@@ -4,7 +4,8 @@ import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import { Link } from "react-router-dom";
 import React from 'react'
-
+import { useSelector, useDispatch} from 'react-redux';
+import {removeFromCart} from "../redux/cartSlice"
 const Container = styled.div``
 
 const Wrapper = styled.div`
@@ -23,6 +24,7 @@ const Top = styled.div`
 const TopButton = styled.button`
     padding: 10px;
     font-weight: 600;
+    margin: 10px;
     cursor: pointer;
     border: ${(props) => props.type === "filled" && "none"}; //?
     background-color: ${(props) =>
@@ -128,8 +130,29 @@ const Button = styled.button`
     font-weight: 600;
     cursor: pointer;
 `
+const RemoveButton = styled.button`
+
+    padding: 15px;
+    border: 2px solid teal;
+    background-color: white;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 10px;
+    &:hover{
+        background-color: #f8f4f4;
+    }
+`
 
 export default function Cart() {
+    const cart = useSelector(state => state.cart).cart;
+    var total = 0;
+    for ( const i in cart){
+        total = total + (cart[i].price * cart[i].quantity)
+    }
+    const dispatch = useDispatch()
+    const handleRemove = (index) => {
+        dispatch(removeFromCart(cart[index]))
+    }
   return (
     <Container>
         <Navbar></Navbar>
@@ -138,70 +161,47 @@ export default function Cart() {
             <Top>
                 <TopButton><Link to='/'>CONTINUE SHOPPING</Link> </TopButton>
                 <TopTexts>
-                    <TopText>Shopping Bag(2)</TopText>
+                    <TopText>Shopping Bag({cart.length})</TopText>
                     <TopText>Your Wishlist (0)</TopText>
                 </TopTexts>
-                <TopButton type="filled">CHECKOUT NOW</TopButton>
+                
             </Top>
             <Bottom>
                 <Info>
-                    <Product>
-                        <ProductDetail>
-                            <Image src={"https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A"}></Image>
-                            <Details>
-                                <ProductName>
-                                    <b>Product:</b> JESSIE THUNDER SHOES
-                                </ProductName>
-                                <ProductId>
-                                    <b>ID:</b> 93813718293
-                                </ProductId>
-                                <ProductColor color="black" />
-                                <ProductSize>
-                                    <b>Size:</b> 37.5
-                                </ProductSize>
-                            </Details>
-                        </ProductDetail>
-                        <PriceDetail>
-                            <ProductAmountContainer>
-                                <Add />
-                                <ProductAmount>2</ProductAmount>
-                                <Remove />
-                            </ProductAmountContainer>
-                            <ProductPrice>$ 30</ProductPrice>
-                        </PriceDetail>
-                    </Product>
-                    <Hr />
-                    <Product>
-                    <ProductDetail>
-                        <Image src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" />
-                        <Details>
-                        <ProductName>
-                            <b>Product:</b> HAKURA T-SHIRT
-                        </ProductName>
-                        <ProductId>
-                            <b>ID:</b> 93813718293
-                        </ProductId>
-                        <ProductColor color="gray" />
-                        <ProductSize>
-                            <b>Size:</b> M
-                        </ProductSize>
-                        </Details>
-                    </ProductDetail>
-                    <PriceDetail>
-                        <ProductAmountContainer>
-                        <Add />
-                        <ProductAmount>1</ProductAmount>
-                        <Remove />
-                        </ProductAmountContainer>
-                        <ProductPrice>$ 20</ProductPrice>
-                    </PriceDetail>
-                    </Product>
+                    {
+                    cart.map((item, index) => (
+                        <Product>
+                            <ProductDetail>
+                                <Image src={item.img}></Image>
+                                <Details>
+                                    <ProductName>
+                                        <b>Product:</b> {item.title}
+                                    </ProductName>
+                                    <ProductId>
+                                        <b>ID:</b> {item.id}
+                                    </ProductId>
+                                    <ProductColor color={item.color} />
+                                    <ProductSize>
+                                        <b>Size:</b> {item.size}
+                                    </ProductSize>
+                                    <ProductSize>
+                                        <b>Quantity:</b> {item.quantity}
+                                    </ProductSize>
+                                </Details>
+                            </ProductDetail>
+                            <PriceDetail>
+                                <RemoveButton onClick={() => handleRemove(index)}>Remove Item</RemoveButton>
+                                <ProductPrice>$ {item.price * item.quantity}</ProductPrice>
+                            </PriceDetail>
+                            <Hr />
+                        </Product>
+                    ))}
                 </Info>
                 <Summary>
                     <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                     <SummaryItem>
                         <SummaryItemText>Subtotal</SummaryItemText>
-                        <SummaryItemPrice>$ 80</SummaryItemPrice>
+                        <SummaryItemPrice>$ {total}</SummaryItemPrice>
                     </SummaryItem>
                     <SummaryItem>
                         <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -213,7 +213,7 @@ export default function Cart() {
                     </SummaryItem>
                     <SummaryItem>
                         <SummaryItemText type="total">Total</SummaryItemText>
-                        <SummaryItemPrice>$ 80</SummaryItemPrice>
+                        <SummaryItemPrice>$ {total}</SummaryItemPrice>
                     </SummaryItem>
                     <Button>CHECKOUT NOW</Button>
                 </Summary>

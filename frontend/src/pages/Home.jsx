@@ -13,8 +13,8 @@ function Home() {
     <Container>
         <Navbar></Navbar>
         <Slider></Slider>
-        <Products></Products>
         <Categories></Categories>
+        <Products></Products>
         <Footer></Footer>
     </Container>
   )

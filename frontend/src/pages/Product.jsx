@@ -2,21 +2,23 @@ import { Add, Remove } from '@mui/icons-material';
 import styled from "styled-components";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
-
-import React from 'react'
-
+import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+import {addToCart} from "../redux/cartSlice"
 const Container = styled.div``;
 
 const Wrapper = styled.div`
     padding: 50px;
     display: flex;
+    flex-wrap: wrap;
 `
 const ImgContainer = styled.div`
     flex: 1;
 `
 const Image = styled.img`
-    width: 100%;
-    height: 90vh;
+    width: 70vh;
+    height: 70vh;
     object-fit: cover;
 `
 const InfoContainer = styled.div`
@@ -54,6 +56,9 @@ const FilterColor = styled.div`
     background-color: ${(props) => props.color};
     margin: 0px 5px;
     cursor: pointer;
+    &:focus {
+        background: red;
+    }
 `
 const FilterSize = styled.select`
     margin-left: 10px;
@@ -71,6 +76,7 @@ const AmountContainer = styled.div`
     display: flex;
     align-items: center;
     font-weight: 700;
+    margin: 5vh;
 `
 const Amount = styled.span`
     width: 30px;
@@ -95,15 +101,83 @@ const Button = styled.button`
 `
 
 export default function Product() {
+    const location = useLocation()
+    const array = location.pathname.split("/"); 
+    const id = array.pop();
+
+    //find the item with id
+    const product = useSelector(state => state.products.products.find(
+       (item) => {
+        return item.id == id;
+       } 
+    ));
+    
+    const [info, setInfo] = useState({
+        "id": product.id,
+        "title": product.title,
+        "img": product.img,
+        "color": null,
+        "size": product.size['1'],
+        "price": product.price,
+        "quantity": 1,
+    });
+
+    const dispatch = useDispatch()
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        dispatch(addToCart(info))
+    }
+    //changing one colors style and chainging back others
+    const handleColor = (color) => {
+        const element = document.getElementById(color)
+        //changing the color value in state
+        setInfo({...info, ["color"] : element.id})
+        
+        let sibling = element.parentNode.firstChild;
+
+        while(sibling) {
+            if(sibling.tagName==="DIV"){
+                if(sibling.id === color){
+                    sibling.style.padding = "5px"
+                    sibling.style.opacity = "100%"
+                    sibling.style.borderStyle = "solid"
+                    
+                }else{
+                    sibling.style.padding = "0px"
+                    sibling.style.opacity = "50%"
+                    sibling.style.borderStyle = "none"
+                }
+            }
+            sibling = sibling.nextSibling;
+        }
+    }
+
+    const handleSelect = (value) => {
+        setInfo({...info, ["size"] : value})
+    }
+    const handleRemove = () => {
+        setInfo({...info, 
+                ["quantity"] : info.quantity - 1 ,
+                ["price"] : info.price - product.price
+            })
+    }
+    const handleAdd = () => {
+        setInfo({...info, 
+                ["quantity"] : info.quantity + 1 ,
+                ["price"] : info.price + product.price
+            })
+    }
+    console.log(info)
   return (
     <Container>
         <Navbar />
         <Wrapper>
             <ImgContainer>
-                <Image src="https://i.ibb.co/S6qMxwr/jean.jpg"/>
+                <Image src={product.img}/>
             </ImgContainer>
             <InfoContainer>
-                <Title>Denim Jumpsuit</Title>
+                <Title>{product.title}</Title>
                 <Desc>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
                     venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
@@ -111,33 +185,35 @@ export default function Product() {
                     tristique tortor pretium ut. Curabitur elit justo, consequat id
                     condimentum ac, volutpat ornare.
                 </Desc>
-                <Price>$ 20</Price>
+                <Price>{`${info.price} $`}</Price>
             </InfoContainer>
             <FilterContainer>
                 <Filter>
                     <FilterTitle>Color</FilterTitle>
-                    <FilterColor color="black" />
-                    <FilterColor color="darkblue" />
-                    <FilterColor color="gray" />
+                    {
+                        Object.values(product.color).map(item => (
+                            <FilterColor color={item} id={item} onClick={() =>handleColor(item)}></FilterColor>
+                          ))}
                 </Filter>
                 <Filter>
                     <FilterTitle>Size</FilterTitle>
-                    <FilterSize>
-                        <FilterSizeOption>XS</FilterSizeOption>
-                        <FilterSizeOption>S</FilterSizeOption>
-                        <FilterSizeOption>M</FilterSizeOption>
-                        <FilterSizeOption>L</FilterSizeOption>
-                        <FilterSizeOption>XL</FilterSizeOption>
+                    <FilterSize 
+                        onChange={(e) => handleSelect(e.currentTarget.value)}>
+                    {
+                        Object.values(product.size).map(item => (
+                    <FilterSizeOption value={item}>{item}</FilterSizeOption>
+                          ))}
                     </FilterSize>
                 </Filter>
             </FilterContainer>
             <AddContainer>
                 <AmountContainer>
-                    <Remove />
-                    <Amount>1</Amount>
-                    <Add />
+                    <Remove onClick={handleRemove}/>
+                    <Amount>{info.quantity}</Amount>
+                    <Add onClick={handleAdd}/>
                 </AmountContainer>
-                <Button>ADD TO CART</Button>
+                {/* if color is not selected, don't allow add to cart */}
+                <Button disabled={info.color === null} onClick={handleClick}>ADD TO CART</Button>
             </AddContainer>
         </Wrapper>
         <Footer></Footer>

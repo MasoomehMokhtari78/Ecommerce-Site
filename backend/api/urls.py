@@ -5,4 +5,5 @@ urlpatterns = [
     path('home', views.firstTest),
     path('register', views.registerUser),
     path('login', views.loginUser),
+    path('products', views.getProducts),
 ]

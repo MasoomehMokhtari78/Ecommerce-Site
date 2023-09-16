@@ -70,7 +70,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-AUTH_USER_MODEL = 'api.UserModel'
+# AUTH_USER_MODEL = 'api.UserModel'
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 MIDDLEWARE = [

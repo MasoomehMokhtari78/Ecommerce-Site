@@ -25,18 +25,18 @@ export const sliderItems = [
   export const categories = [
     {
       id: 1,
-      img: "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      title: "SHIRT STYLE!",
+      img: "https://z9n2r9j5.stackpathcdn.com/wp-content/uploads/2019/08/Screen-Shot-2022-05-06-at-9.29.22-AM.png",
+      title: "Tops",
     },
     {
       id: 2,
-      img: "https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      title: "LOUNGEWEAR LOVE",
+      img: "https://images.asos-media.com/products/weekday-area-cargo-jeans-in-teal-blue-wash/204045572-1-blue?$n_640w$&wid=513&fit=constrain",
+      title: "Pants",
     },
     {
       id: 3,
-      img: "https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-      title: "LIGHT JACKETS",
+      img: "https://www.herstylecode.com/2016/08/classic-polyvore-outfits-for-winter-2.jpg",
+      title: "All Clothes",
     },
   ];
 

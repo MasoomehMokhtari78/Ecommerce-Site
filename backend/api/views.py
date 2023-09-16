@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import UserSerializer, UserSerializerWithToken
-from api.models import UserModel
+from .serializers import UserSerializer, UserSerializerWithToken, ProductSerializer
+from api.models import UserModel, Product
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+import json
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -48,3 +49,17 @@ def loginUser(request):
     token = RefreshToken.for_user(user)
     # serializer = UserSerializerWithToken(user, many=False)
     return Response(({'refresh': str(token), 'access': str(token.access_token)}))
+
+@api_view(['GET'])
+def getProducts(request):
+    category = request.GET.get("category")
+    products = None
+    if category.lower() == "all clothes":
+        products = Product.objects.all()
+    else:
+
+        products = Product.objects.filter(category="{" + category + "}")
+    print(products)
+    serializer = ProductSerializer(products, many=True, context={'request': request})
+    return Response(serializer.data)
+

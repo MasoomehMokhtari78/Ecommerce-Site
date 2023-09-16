@@ -11,7 +11,7 @@ class UserModel(AbstractBaseUser):
     email = models.EmailField(blank=False)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    # img
+    # img = models.ImageField(upload_to ='productsImage/')
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = [username, email]
 
@@ -20,13 +20,16 @@ class UserModel(AbstractBaseUser):
 class Product(models.Model):
     title = models.CharField(max_length=200, unique=True, blank=False)
     desc = models.CharField(max_length=500, blank=False)
-    # img
-    categories = models.JSONField(default="{}")
+    img = models.ImageField(upload_to ='productImages/', default=None, blank=True)
+    category = models.JSONField(default="{}")
     size = models.JSONField(default="{}")
     color = models.JSONField(default="{}")
     price = models.IntegerField(blank=False)
     inStock = models.BooleanField(default=True)
     date_added = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
 
 class Cart(models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE)

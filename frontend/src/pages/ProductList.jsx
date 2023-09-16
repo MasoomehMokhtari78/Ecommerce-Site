@@ -3,7 +3,12 @@ import Navbar from "../Components/Navbar";
 import Products from "../Components/Products";
 import Footer from "../Components/Footer";
 import axios from 'axios';
-import React from 'react'
+import React, {useEffect } from 'react'
+import { publicRequest } from "../requestMethods";
+import { useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import {setProducts} from "../redux/productSlice"
+import Card from "../Components/Card";
 
 const Container = styled.div``
 
@@ -28,14 +33,37 @@ const Select = styled.select`
 `
 const Option = styled.option``
 
+const ProductsContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+`
+
+
+
 export default function ProductList() {
     
-    const res = axios.get('https://fakestoreapi.com/products')
-    console.log(res)
+    const location = useLocation()
+    // TODO: cleaner way to get category
+    const array = location.pathname.split("products/"); 
+    const category = array.pop();
+
+    const dispatch = useDispatch()
+    
+    useEffect(()=> {
+        publicRequest.get(`/products?category=${category}`)
+        .then(res => dispatch(setProducts(res.data)));
+
+        },[]);
+        
+    const products = useSelector(state => state.products);
+    console.log(products.products)
+        
+
   return (
     <Container>
         <Navbar />
-        <Title>Dresses</Title>
+        <Title>{category}</Title>
         <FilterContainer>
             <Filter>
                 <FilterText>Filter Products:</FilterText>
@@ -70,6 +98,11 @@ export default function ProductList() {
                 </Select>
             </Filter>
         </FilterContainer>
+        <ProductsContainer>
+            {products.products.map((item) => (
+                <Card item={item} key={item.id}></Card>
+            ))}
+        </ProductsContainer>
     </Container>
   )
 }

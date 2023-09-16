@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState} from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
 // import {Badge} from '@mui/material'
@@ -93,12 +93,12 @@ export default function Navbar() {
                     <Logo><StyledLink  to='/'>SHOP</StyledLink></Logo>
                 </Center>
                 <Right>
-                    { isLoggedIn ? null: <MenuItem><StyledLink to='register'>REGISTER</StyledLink></MenuItem>}
-                    { isLoggedIn ? null: <MenuItem><StyledLink to='login'>LOGIN</StyledLink></MenuItem>}
+                    { isLoggedIn ? null: <MenuItem><StyledLink to='/register'>REGISTER</StyledLink></MenuItem>}
+                    { isLoggedIn ? null: <MenuItem><StyledLink to='/login'>LOGIN</StyledLink></MenuItem>}
                     { isLoggedIn ? <MenuItem onClick={handleLogout}><StyledLink>LOGOUT</StyledLink></MenuItem>: null}
                     <MenuItem>
                         {/* <Badge badgeContent={4} color="primary"></Badge> */}
-                        <StyledLink  to='cart'><ShoppingCartOutlinedIcon /></StyledLink>
+                        <StyledLink  to='/cart'><ShoppingCartOutlinedIcon /></StyledLink>
                     </MenuItem>
                 </Right>
             </Wrapper>

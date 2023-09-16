@@ -1,9 +1,4 @@
 import './App.css';
-import Categories from './Components/Categories';
-import Navbar from './Components/Navbar';
-import Slider from './Components/Slider';
-import Footer from './Components/Footer'
-import Products from './Components/Products';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -21,6 +16,8 @@ function App() {
           <Route path='register' element={<Register/>}/>
           <Route path='login' element={<Login/>}/>
           <Route path='cart' element={<Cart/>}/>
+          <Route path='products/:category' element={<ProductList/>}/>
+          <Route path=':id' element={<Product/>}/>
         </Route>
       </Routes>
       {/* <Navbar></Navbar>
