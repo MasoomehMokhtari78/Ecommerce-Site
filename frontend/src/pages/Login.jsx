@@ -65,8 +65,14 @@ export default function Login() {
         dispatch(loginStart())
         try {
             const res = await publicRequest.post('/login', {username, password});
-            dispatch(loginSuccess(res.data))
-            navigate('/')
+            console.log('res')
+            console.log(res)
+            if(res.data==="A user with this username and password was not found."){
+                alert(res.data)
+            }else{
+              dispatch(loginSuccess(res.data))
+              navigate('/')
+            }
         } catch (error) {
             console.log(error)
         }

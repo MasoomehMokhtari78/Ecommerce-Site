@@ -25,3 +25,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
         
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ['favoriteProducts']

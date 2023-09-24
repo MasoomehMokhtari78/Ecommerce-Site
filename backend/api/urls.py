@@ -6,4 +6,5 @@ urlpatterns = [
     path('register', views.registerUser),
     path('login', views.loginUser),
     path('products', views.getProducts),
+    path('addFavorite', views.addFavorite),
 ]

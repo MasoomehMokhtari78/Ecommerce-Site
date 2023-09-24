@@ -1,9 +1,12 @@
 import React, { useState} from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
-// import {Badge} from '@mui/material'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import {
+    FavoriteBorderOutlined,
+    SearchOutlined,
+    ShoppingCartOutlined,
+  } from '@mui/icons-material';
+  import Badge from '@mui/material/Badge';
 import { useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,7 +17,6 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-    padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content:  space-between;
@@ -30,6 +32,10 @@ const Language = styled.span`
     font-size: 14px;
     cursor: pointer;
     /* color: white; */
+
+    @media screen and (max-width: 600px) {
+        display: none;
+      }
 `
 const SearchContainer = styled.div`
     border: 0.5px solid lightgray;
@@ -38,6 +44,9 @@ const SearchContainer = styled.div`
     display: flex;
     align-items: center;
     border-radius: 5px;
+    @media screen and (max-width: 600px) {
+        display: none;
+      }
 
 `
 const Input = styled.input`
@@ -60,7 +69,10 @@ const Right = styled.div`
 const MenuItem = styled.div`
     font-size: 14px;
     cursor: pointer;
-    margin-left: 25px;
+    margin: 12px;
+    @media screen and (max-width: 600px) {
+        display: none;
+      }
 
 `
 const StyledLink  = styled(Link)`
@@ -70,6 +82,10 @@ const StyledLink  = styled(Link)`
 
 export default function Navbar() {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    //get the number of items in cart
+    const cartCount = Object.keys(useSelector(state => state.cart)).length
+    const favCount = useSelector(state => state.user.favoriteProducts).length
+    console.log(favCount)
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [username, setUsername] = useState('')
@@ -86,7 +102,7 @@ export default function Navbar() {
                     <Language>EN</Language>
                     <SearchContainer>
                         <Input placeholder="Search"></Input>
-                        <SearchOutlinedIcon/>
+                        <SearchOutlined/>
                     </SearchContainer>
                 </Left>
                 <Center>
@@ -97,8 +113,19 @@ export default function Navbar() {
                     { isLoggedIn ? null: <MenuItem><StyledLink to='/login'>LOGIN</StyledLink></MenuItem>}
                     { isLoggedIn ? <MenuItem onClick={handleLogout}><StyledLink>LOGOUT</StyledLink></MenuItem>: null}
                     <MenuItem>
-                        {/* <Badge badgeContent={4} color="primary"></Badge> */}
-                        <StyledLink  to='/cart'><ShoppingCartOutlinedIcon /></StyledLink>
+                        <Badge badgeContent={cartCount + 1} color="primary">
+                            <StyledLink  to='/cart'>
+                                <ShoppingCartOutlined />
+                            </StyledLink>
+                        </Badge>
+                        
+                    </MenuItem>
+                    <MenuItem>
+                        <Badge badgeContent={favCount} color="primary">
+                            <StyledLink  to='/cart'>
+                            <FavoriteBorderOutlined />
+                            </StyledLink>
+                        </Badge>
                     </MenuItem>
                 </Right>
             </Wrapper>

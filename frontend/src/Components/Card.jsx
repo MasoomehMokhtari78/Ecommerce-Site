@@ -33,6 +33,7 @@ const Title = styled.div`
     color: black;
     font-weight: bold;
     margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
 `
 const StyledLink  = styled(Link)`
     text-decoration: none;

@@ -16,6 +16,9 @@ const Image = styled.img`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    @media screen and (max-width: 600px) {
+        height: 20vh;
+    }
 `
 const Info = styled.div`
     position: absolute;
@@ -51,10 +54,11 @@ export default function CategoryItem({item}) {
         <Image className='img' src={item.img}></Image>
         <Info>
             <Title>{item.title}</Title>
-            <Button><StyledLink  
+            <StyledLink  
                         to={`products/${item.title}`}
                         state={{ category: item.title }}
-                        >SHOP NOW</StyledLink></Button>
+                        ><Button>SHOP NOW</Button>
+            </StyledLink>
         </Info>
     </Container>
   )

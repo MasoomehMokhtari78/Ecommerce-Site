@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import Navbar from "../Components/Navbar";
-import Products from "../Components/Products";
-import Footer from "../Components/Footer";
-import axios from 'axios';
 import React, {useEffect } from 'react'
 import { publicRequest } from "../requestMethods";
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import {setProducts} from "../redux/productSlice"
-import Card from "../Components/Card";
+import ProductCard from "../Components/ProductCard";
 
 const Container = styled.div``
 
@@ -57,8 +54,9 @@ export default function ProductList() {
         },[]);
         
     const products = useSelector(state => state.products);
-    console.log(products.products)
-        
+    const user = useSelector(state => state.user.id);
+    console.log("productList")
+    console.log(user)
 
   return (
     <Container>
@@ -100,7 +98,7 @@ export default function ProductList() {
         </FilterContainer>
         <ProductsContainer>
             {products.products.map((item) => (
-                <Card item={item} key={item.id}></Card>
+                <ProductCard item={item} user={user} key={item.id}></ProductCard>
             ))}
         </ProductsContainer>
     </Container>

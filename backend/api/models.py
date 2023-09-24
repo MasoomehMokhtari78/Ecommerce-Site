@@ -4,18 +4,6 @@ from django.utils import timezone
 from django.contrib.auth.models import UserManager
 # Create your models here.
 
-class UserModel(AbstractBaseUser):
-    username = models.CharField(max_length=100, unique=True, blank=False)
-    firstName = models.CharField(max_length=100, blank=True)
-    lastName = models.CharField(max_length=100, blank=True)
-    email = models.EmailField(blank=False)
-    is_admin = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now)
-    # img = models.ImageField(upload_to ='productsImage/')
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = [username, email]
-
-    objects = UserManager()
 
 class Product(models.Model):
     title = models.CharField(max_length=200, unique=True, blank=False)
@@ -30,6 +18,19 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+class UserModel(AbstractBaseUser):
+    username = models.CharField(max_length=100, unique=True, blank=False)
+    firstName = models.CharField(max_length=100, blank=True)
+    lastName = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(blank=False)
+    is_admin = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(default=timezone.now)
+    favoriteProducts = models.ManyToManyField(Product)
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = [username, email]
+
+    objects = UserManager()
 
 class Cart(models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE)

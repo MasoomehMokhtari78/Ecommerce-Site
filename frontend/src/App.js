@@ -6,10 +6,12 @@ import Product from './pages/Product';
 import ProductList from './pages/ProductList';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
+import GlobalStyle from './css/globalStyles';
 
 function App() {
   return (
     <BrowserRouter>
+    <GlobalStyle></GlobalStyle>
       <Routes>
         <Route path='/'>
           <Route index element={<Home/>}/>

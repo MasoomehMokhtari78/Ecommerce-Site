@@ -7,6 +7,9 @@ const Container = styled.div`
     display: flex;
     padding: 20px;
     justify-content: space-between;
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+    }
 `
 
 export default function Categories() {
