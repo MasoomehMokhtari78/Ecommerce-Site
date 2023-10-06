@@ -55,8 +55,6 @@ export default function ProductList() {
         
     const products = useSelector(state => state.products);
     const user = useSelector(state => state.user.id);
-    console.log("productList")
-    console.log(user)
 
   return (
     <Container>

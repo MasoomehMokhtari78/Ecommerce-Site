@@ -50,8 +50,8 @@ def loginUser(request):
     print('here')
     token = RefreshToken.for_user(user)
     print({'id':user.id,'refresh': str(token), 'access': str(token.access_token)})
-    # serializer = UserSerializerWithToken(user, many=False)
-    return Response(({'id':user.id,'refresh': str(token), 'access': str(token.access_token)}))
+    favSerializer = FavoriteSerializer(user)
+    return Response(({'id':user.id, 'favoriteProducts':favSerializer.data, 'refresh': str(token), 'access': str(token.access_token)}))
 
 @api_view(['GET'])
 def getProducts(request):
@@ -65,17 +65,30 @@ def getProducts(request):
 
         products = Product.objects.filter(category="{" + category + "}")
     print(products)
+    #context is used here for getting full image url
+    serializer = ProductSerializer(products, many=True, context={'request': request})
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getProductsById(request):
+    ids = request.GET.get('ids')
+    print(ids.split(","))
+    idsArr = ids.split(",")
+    products = Product.objects.filter(id__in=idsArr)
+    print(products)
     serializer = ProductSerializer(products, many=True, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['POST'])
-def addFavorite(request):
+def setFavorite(request):
     data = request.data
     user = UserModel.objects.get(id=data['user'])
     product = Product.objects.get(id=data['product'])
-    user.favoriteProducts.add(product)
+    if(data['keyword'] == 'add'):
+        user.favoriteProducts.add(product)
+    elif (data['keyword'] == 'remove'):
+        user.favoriteProducts.remove(product)
     user.save()
     serializer = FavoriteSerializer(user)
     print(serializer.data)
     return Response(serializer.data)
-

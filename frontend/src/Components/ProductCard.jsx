@@ -1,14 +1,15 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {
     FavoriteBorderOutlined,
+    Favorite,
     SearchOutlined,
-    ShoppingCartOutlined,
   } from '@mui/icons-material';
   import styled from "styled-components";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { publicRequest } from "../requestMethods";
-import {addFavorite} from "../redux/userSlice"
+import {setFavorite} from "../redux/userSlice"
+import { useEffect } from 'react';
 const Info = styled.div`
     opacity: 0;
     width: 100%;
@@ -69,6 +70,7 @@ const Icon = styled.div`
 `
 const StyledLink  = styled(Link)`
     text-decoration: none;
+    color: black;
     &:visited {
         text-decoration:none;
         color: black; 
@@ -77,20 +79,32 @@ const StyledLink  = styled(Link)`
 
 export default function ProductCard({item, user}) {
     const dispatch = useDispatch()
+    const [isFavorite, setIsFavorite] = useState(false)
+    const favList = useSelector(state => state.user.favoriteProducts);
+    //convert object to array then search for id
+    useEffect(() => {
+        setIsFavorite((Object.values(favList)).includes(item.id))
+    },[favList])
     const handleFavorite = 
         async (e) => {
             e.preventDefault();
-            console.log(user)
             if (user){
-                try {
+                if(isFavorite){
                     const res = await publicRequest.post(
-                    '/addFavorite',
-                    {'user': user, 'product': item.id})
-                    .then(res => dispatch(addFavorite(res.data.favoriteProducts)));
-                    
-                } catch (error) {
-                    console.log(error)
-                }
+                        '/setFavorite',
+                        {'user': user, 'product': item.id, 'keyword':'remove'})
+                        .then(res => dispatch(setFavorite(res.data.favoriteProducts)));
+                }else{
+                    try {
+                        const res = await publicRequest.post(
+                        '/setFavorite',
+                        {'user': user, 'product': item.id, 'keyword':'add'})
+                        .then(res => dispatch(setFavorite(res.data.favoriteProducts)));
+                        
+                    } catch (error) {
+                        console.log(error)
+                    }
+                } 
             }else{
                 alert('please login first.')
             }
@@ -111,7 +125,7 @@ export default function ProductCard({item, user}) {
             </StyledLink>
             
             <Icon onClick={handleFavorite}>
-                <FavoriteBorderOutlined />
+                {isFavorite ? <Favorite/> : <FavoriteBorderOutlined /> }
             </Icon>
         </Info>
     </Container>

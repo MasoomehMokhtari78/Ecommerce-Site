@@ -15,14 +15,12 @@ const userSlice = createSlice({
             state.isFetching = true
         },
         loginSuccess: (state, action) => {
-            console.log("loginSuccess")
-            console.log(action)
             state.isFetching = false;
             state.isLoggedIn = true;
             state.refresh = action.payload.refresh;
             state.access = action.payload.access;
             state.id = action.payload.id;
-            state.favoriteProducts = action.payload.favoriteProducts;
+            state.favoriteProducts = action.payload.favoriteProducts.favoriteProducts;
 
         },
         loginFailure: (state) => {
@@ -39,7 +37,7 @@ const userSlice = createSlice({
             state.isLoggedIn = false;
             state.isFetching = false;
         },
-        addFavorite: (state, action) => {
+        setFavorite: (state, action) => {
             state.favoriteProducts = action.payload;
         }
     }
@@ -50,6 +48,6 @@ export const {
     loginSuccess,
     loginFailure,
     logout,
-    addFavorite
+    setFavorite
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -168,7 +168,6 @@ export default function Product() {
                 ["price"] : info.price + product.price
             })
     }
-    console.log(info)
   return (
     <Container>
         <Navbar />

@@ -83,10 +83,8 @@ const StyledLink  = styled(Link)`
 export default function Navbar() {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
     //get the number of items in cart
-    const cartCount = Object.keys(useSelector(state => state.cart)).length
+    const cartCount = Object.keys(useSelector(state => state.cart.cart)).length
     const favCount = useSelector(state => state.user.favoriteProducts).length
-    console.log(favCount)
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [username, setUsername] = useState('')
     const handleLogout = useCallback(
@@ -113,7 +111,7 @@ export default function Navbar() {
                     { isLoggedIn ? null: <MenuItem><StyledLink to='/login'>LOGIN</StyledLink></MenuItem>}
                     { isLoggedIn ? <MenuItem onClick={handleLogout}><StyledLink>LOGOUT</StyledLink></MenuItem>: null}
                     <MenuItem>
-                        <Badge badgeContent={cartCount + 1} color="primary">
+                        <Badge badgeContent={cartCount} color="primary">
                             <StyledLink  to='/cart'>
                                 <ShoppingCartOutlined />
                             </StyledLink>
@@ -121,11 +119,11 @@ export default function Navbar() {
                         
                     </MenuItem>
                     <MenuItem>
-                        <Badge badgeContent={favCount} color="primary">
-                            <StyledLink  to='/cart'>
+                    { isLoggedIn ? <Badge badgeContent={favCount} color="primary">
+                            <StyledLink  to='/favs'>
                             <FavoriteBorderOutlined />
                             </StyledLink>
-                        </Badge>
+                        </Badge> : null}
                     </MenuItem>
                 </Right>
             </Wrapper>

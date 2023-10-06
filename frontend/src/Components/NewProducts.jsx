@@ -4,8 +4,8 @@ import { popularProducts } from "../data";
 import ProductCard from "./ProductCard";
 import Card from './Card';
 import { publicRequest } from "../requestMethods";
-import { useSelector} from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import {setProducts} from "../redux/productSlice"
 
 const Container = styled.div`
     padding: 20px;
@@ -19,15 +19,18 @@ export default function NewProducts() {
   const [newProducts, setNewProducts] = useState([])
 
   const user = useSelector(state => state.user.id);
-  
+  const dispatch = useDispatch()
   useEffect(()=> {
     publicRequest.get(`/products?category=new`)
     .then(res => 
-      setNewProducts(res.data))
+      dispatch(setProducts(res.data))
+    )
     },[]);
+    const products = useSelector(state => state.products);
+    
   return (
     <Container>
-        {newProducts.map((item) => (
+        {products.products.map((item) => (
             <ProductCard item={item} user={user} key={item.id}/>
         ))}
     </Container>
